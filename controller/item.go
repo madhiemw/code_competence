@@ -78,6 +78,9 @@ func GetAllItem(c echo.Context) error {
 }
 
 func UpdateItem(c echo.Context) error {
+	if _, err := middleware.IsUser(c); err != nil {
+		return c.JSON(401, "Unauthorized")
+	}
 	id := c.Param("id")
 
 	item, err := usecase.GetItemByid(id)
