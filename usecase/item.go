@@ -26,7 +26,15 @@ func GetAllItem() (resp []payload.GetAllItemResponse, err error) {
 func GetItemByid(id uint64) (item *model.Item, err error) {
 	item, err = repository.GetItemByid(id)
 	if err != nil {
-		return item, errors.New("item not found00")
+		return item, errors.New("item not found")
+	}
+	return item, nil
+}
+
+func GetItemByName(name string)(item *model.Item, err error){
+	item, err = repository.GetItemByName(name)
+	if err != nil {
+		return item, errors.New("item not found")
 	}
 	return item, nil
 }

@@ -23,12 +23,27 @@ func AddItem(c echo.Context) error {
 
 func GetItemByid(c echo.Context) error {
 	id, _ := strconv.ParseUint(c.Param("id"), 10, 32)
-	_, err := usecase.GetItemByid(id)
+	
+	response, err := usecase.GetItemByid(id)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, "item not found")
 	}
-	return nil
+
+	return c.JSON(http.StatusOK, response)
 }
+
+func GetItemByName(c echo.Context) error {
+	name := c.QueryParam("keyword")
+
+	response, err := usecase.GetItemByName(name)
+	if err != nil{
+		return c.JSON(http.StatusBadRequest, "item not found")
+	}
+	
+	return c.JSON(http.StatusOK, response)
+
+}
+
 
 func DeleteItem(c echo.Context) error {
 	id, _ := strconv.ParseUint(c.Param("id"), 10, 32)
@@ -42,6 +57,7 @@ func DeleteItem(c echo.Context) error {
 	if err != nil {
 		return err
 	}
+	
 	return c.JSON(http.StatusOK, "delete complete")
 }
 

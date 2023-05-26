@@ -12,9 +12,18 @@ func GetAllItem() (item []model.Item, err error) {
 
 	return item, nil
 }
+func GetItemByName(name string)(item *model.Item, err error){
+	item = &model.Item{Name: name}
+	if err := config.DB.Where("Name = ?", name).Find(&item).Error; err != nil {
+		return nil, err
+	}
+
+	return item, nil
+}
+
 
 func GetItemByid(id uint64) (item *model.Item, err error) {
-	item.ID = id
+	item = &model.Item{ID: id} 
 	if err := config.DB.Where("id = ?", id).First(&item).Error; err != nil {
 		return nil, err
 	}
