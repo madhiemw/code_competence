@@ -30,9 +30,6 @@ func IsUser(c echo.Context) (int, error) {
 		return 0, echo.NewHTTPError(401, "Unauthorized")
 	}
 	claims := user.Claims.(jwt.MapClaims)
-	if claims["role"] != constants.User {
-		return 0, echo.NewHTTPError(401, "Unauthorized")
-	}
 	userId := int(claims["userId"].(float64))
 
 	return userId, nil

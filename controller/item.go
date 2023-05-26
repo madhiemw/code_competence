@@ -1,17 +1,23 @@
 package controller
 
 import (
+	"codecompetence/middleware"
 	"codecompetence/model/payload"
 	"codecompetence/usecase"
 	"net/http"
-	"strconv"
 
 	"github.com/labstack/echo"
 )
 
 func AddItem(c echo.Context) error {
+	if _, err := middleware.IsUser(c); err != nil {
+		return c.JSON(401, "Unauthorized")
+	}
+
 	req := payload.CreateItemRequest{}
+	
 	c.Bind(&req)
+	
 	err := usecase.CreateItem(&req)
 
 	if err != nil {
@@ -22,8 +28,8 @@ func AddItem(c echo.Context) error {
 }
 
 func GetItemByid(c echo.Context) error {
-	id, _ := strconv.ParseUint(c.Param("id"), 10, 32)
-	
+	id := c.Param("id")
+
 	response, err := usecase.GetItemByid(id)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, "item not found")
@@ -36,17 +42,19 @@ func GetItemByName(c echo.Context) error {
 	name := c.QueryParam("keyword")
 
 	response, err := usecase.GetItemByName(name)
-	if err != nil{
+	if err != nil {
 		return c.JSON(http.StatusBadRequest, "item not found")
 	}
-	
+
 	return c.JSON(http.StatusOK, response)
 
 }
 
-
 func DeleteItem(c echo.Context) error {
-	id, _ := strconv.ParseUint(c.Param("id"), 10, 32)
+	if _, err := middleware.IsUser(c); err != nil {
+		return c.JSON(401, "Unauthorized")
+	}
+	id := c.Param("id")
 
 	item, err := usecase.GetItemByid(id)
 	if err != nil {
@@ -57,7 +65,7 @@ func DeleteItem(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	
+
 	return c.JSON(http.StatusOK, "delete complete")
 }
 
@@ -70,7 +78,7 @@ func GetAllItem(c echo.Context) error {
 }
 
 func UpdateItem(c echo.Context) error {
-	id, _ := strconv.ParseUint(c.Param("id"), 10, 32)
+	id := c.Param("id")
 
 	item, err := usecase.GetItemByid(id)
 	if err != nil {

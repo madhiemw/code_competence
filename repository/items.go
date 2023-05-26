@@ -3,6 +3,8 @@ package repository
 import (
 	"codecompetence/config"
 	"codecompetence/model"
+
+	"github.com/google/uuid"
 )
 
 func GetAllItem() (item []model.Item, err error) {
@@ -12,7 +14,7 @@ func GetAllItem() (item []model.Item, err error) {
 
 	return item, nil
 }
-func GetItemByName(name string)(item *model.Item, err error){
+func GetItemByName(name string) (item *model.Item, err error) {
 	item = &model.Item{Name: name}
 	if err := config.DB.Where("Name = ?", name).Find(&item).Error; err != nil {
 		return nil, err
@@ -21,9 +23,8 @@ func GetItemByName(name string)(item *model.Item, err error){
 	return item, nil
 }
 
-
-func GetItemByid(id uint64) (item *model.Item, err error) {
-	item = &model.Item{ID: id} 
+func GetItemByid(id string) (item *model.Item, err error) {
+	item = &model.Item{ID: id}
 	if err := config.DB.Where("id = ?", id).First(&item).Error; err != nil {
 		return nil, err
 	}
@@ -41,6 +42,7 @@ func DeleteItem(item *model.Item) error {
 }
 
 func CreateItem(item *model.Item) error {
+	item.ID = uuid.New().String()
 
 	if err := config.DB.Create(&item).Error; err != nil {
 		return err

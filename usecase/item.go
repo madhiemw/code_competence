@@ -16,6 +16,7 @@ func GetAllItem() (resp []payload.GetAllItemResponse, err error) {
 	resp = []payload.GetAllItemResponse{}
 	for _, item := range items {
 		resp = append(resp, payload.GetAllItemResponse{
+			ID:			item.ID,
 			Name:       item.Name,
 			CategoryID: item.CategoryID,
 		})
@@ -23,7 +24,7 @@ func GetAllItem() (resp []payload.GetAllItemResponse, err error) {
 	return resp, nil
 }
 
-func GetItemByid(id uint64) (item *model.Item, err error) {
+func GetItemByid(id string) (item *model.Item, err error) {
 	item, err = repository.GetItemByid(id)
 	if err != nil {
 		return item, errors.New("item not found")
@@ -31,7 +32,7 @@ func GetItemByid(id uint64) (item *model.Item, err error) {
 	return item, nil
 }
 
-func GetItemByName(name string)(item *model.Item, err error){
+func GetItemByName(name string) (item *model.Item, err error) {
 	item, err = repository.GetItemByName(name)
 	if err != nil {
 		return item, errors.New("item not found")
