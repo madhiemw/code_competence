@@ -60,11 +60,11 @@ func UpdateItem(item *model.Item) error {
 	return nil
 }
 
-// func CreateCategory(item *model.Category) error {
+func GetItemByCategoryID(Category uint64)(item *model.Item,err error) {
+	item = &model.Item{CategoryID: Category}
+	if err := config.DB.Where("category_id = ?", Category).First(&item).Error; err != nil {
+		return nil, err
+	}
 
-// 	if err := config.DB.Create(&item).Error; err != nil {
-// 		return err
-// 	}
-
-// 	return nil
-// }
+	return item, nil
+}

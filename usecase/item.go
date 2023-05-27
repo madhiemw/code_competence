@@ -32,6 +32,13 @@ func GetItemByid(id string) (item *model.Item, err error) {
 	return item, nil
 }
 
+func GetItemByCategoryID(CategoryID uint64) (item *model.Item, err error) {
+	item, err = repository.GetItemByCategoryID(CategoryID)
+	if err != nil {
+		return item, errors.New("item not found")
+	}
+	return item, nil
+}
 func GetItemByName(name string) (item *model.Item, err error) {
 	item, err = repository.GetItemByName(name)
 	if err != nil {

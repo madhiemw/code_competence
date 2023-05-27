@@ -5,6 +5,7 @@ import (
 	"codecompetence/model/payload"
 	"codecompetence/usecase"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo"
 )
@@ -15,9 +16,9 @@ func AddItem(c echo.Context) error {
 	}
 
 	req := payload.CreateItemRequest{}
-	
+
 	c.Bind(&req)
-	
+
 	err := usecase.CreateItem(&req)
 
 	if err != nil {
@@ -37,7 +38,16 @@ func GetItemByid(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, response)
 }
+func GetItemByCategoryID(c echo.Context) error {
+	id, _ := strconv.ParseUint(c.Param("id"), 10, 32)
 
+	response, err := usecase.GetItemByCategoryID(id)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, "item not found")
+	}
+
+	return c.JSON(http.StatusOK, response)
+}
 func GetItemByName(c echo.Context) error {
 	name := c.QueryParam("keyword")
 
